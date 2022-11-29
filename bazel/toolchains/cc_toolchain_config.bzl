@@ -1,18 +1,10 @@
-"""Sample Starlark definition defining a C++ toolchain's behavior.
-
-When you build a cc_* rule, this logic defines what programs run for what
-build steps (e.g. compile / link / archive) and how their command lines are
-structured.
-
-This is a proof-of-concept simple implementation. It doesn't construct fancy
-command lines and uses mock shell scripts to compile and link
-("sample_compiler" and "sample_linker"). See
+"""
 https://docs.bazel.build/versions/main/cc-toolchain-config-reference.html and
-https://docs.bazel.build/versions/main/tutorial/cc-toolchain-config.html for
-advanced usage.
+https://docs.bazel.build/versions/main/tutorial/cc-toolchain-config.html
 """
 
 load("@bazel_tools//tools/cpp:cc_toolchain_config_lib.bzl", "tool_path")
+load("@rules_cc//cc:defs.bzl", "cc_toolchain")
 
 def _impl(ctx):
     tool_paths = [
@@ -76,7 +68,7 @@ def _impl(ctx):
         tool_paths = tool_paths,
     )
 
-cc_toolchain_config = rule(
+cc_toolchain_config_rule = rule(
     implementation = _impl,
     # You can alternatively define attributes here that make it possible to
     # instantiate different cc_toolchain_config targets with different behavior.
@@ -88,3 +80,30 @@ cc_toolchain_config = rule(
     },
     provides = [CcToolchainConfigInfo],
 )
+
+def cc_toolchain_config(
+        toolchain_id,
+        host_arch,
+        target_arch,
+        soctype = "",
+        flavor = ""):
+    toolchain_config_name = "{}_toolchain_config".format(toolchain_id)
+    cc_toolchain_config_rule(
+        name = toolchain_config_name,
+        host_arch = host_arch,
+        target_arch = target_arch,
+        soctype = soctype,
+        flavor = flavor,
+    )
+    cc_toolchain_name = "{}_cc_toolchain".format(toolchain_id)
+    cc_toolchain(
+        name = cc_toolchain_name,
+        all_files = ":toolchain_files",
+        ar_files = ":toolchain_files",
+        compiler_files = ":toolchain_files",
+        dwp_files = ":toolchain_files",
+        linker_files = ":toolchain_files",
+        objcopy_files = ":toolchain_files",
+        strip_files = ":toolchain_files",
+        toolchain_config = ":{}".format(toolchain_config_name),
+    )
