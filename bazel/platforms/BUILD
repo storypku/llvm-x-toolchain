@@ -4,7 +4,14 @@ package(default_visibility = ["//visibility:public"])
 # https://docs.bazel.build/versions/master/platforms.html.
 platform(
     name = "x86_64",
-    constraint_values = ["@platforms//cpu:x86_64"],
+    constraint_values = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:linux",
+    ],
+    exec_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:linux",
+    ],
 )
 
 platform(
@@ -17,7 +24,14 @@ platform(
 
 platform(
     name = "aarch64",
-    constraint_values = ["@platforms//cpu:aarch64"],
+    constraint_values = [
+        "@platforms//cpu:aarch64",
+        "@platforms//os:linux",
+    ],
+    exec_compatible_with = [
+        "@platforms//cpu:aarch64",
+        "@platforms//os:linux",
+    ],
 )
 
 # Native Platform for Xavier
@@ -37,6 +51,7 @@ platform(
     ],
     exec_compatible_with = [
         "@platforms//cpu:x86_64",
+        "@platforms//os:linux",
     ],
     parents = [":aarch64"],
 )
@@ -48,6 +63,7 @@ platform(
     ],
     exec_compatible_with = [
         "@platforms//cpu:x86_64",
+        "@platforms//os:linux",
     ],
     parents = [":aarch64"],
 )

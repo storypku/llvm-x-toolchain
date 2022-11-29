@@ -1,90 +1,70 @@
-"""Sample Starlark definition defining a C++ toolchain's behavior.
+load("@rules_cc//cc:defs.bzl", "cc_toolchain")
+load(":cc_toolchain_config.bzl", "cc_toolchain_config")
 
-When you build a cc_* rule, this logic defines what programs run for what
-build steps (e.g. compile / link / archive) and how their command lines are
-structured.
+_SUPPORTED_COMBINATIONS = [
+    ("x86_64", "x86_64", "", ""),
+    ("x86_64", "x86_64", "", "asan"),
+    ("x86_64", "aarch64", "j5", ""),
+    ("x86_64", "aarch64", "xavier", ""),
+    ("aarch64", "aarch64", "xavier", ""),
+    ("aarch64", "aarch64", "", ""),
+]
 
-This is a proof-of-concept simple implementation. It doesn't construct fancy
-command lines and uses mock shell scripts to compile and link
-("sample_compiler" and "sample_linker"). See
-https://docs.bazel.build/versions/main/cc-toolchain-config-reference.html and
-https://docs.bazel.build/versions/main/tutorial/cc-toolchain-config.html for
-advanced usage.
-"""
+def _name_prefix(host_arch, target_arch, soctype = "", flavor = ""):
+    if host_arch != target_arch:
+        if flavor:
+            return "{}_{}_cross".format(soctype, flavor)
+        else:
+            return "{}_cross".format(soctype)
+    else:  # Native
+        if soctype:
+            return "{}_{}".format(soctype, flavor) if flavor else soctype
+        else:
+            return "{}_{}".format(target_arch, flavor) if flavor else target_arch
 
-load("@bazel_tools//tools/cpp:cc_toolchain_config_lib.bzl", "tool_path")
+def define_my_toolchains():
+    for (host_arch, target_arch, soctype, flavor) in _SUPPORTED_COMBINATIONS:
+        tag_id = _name_prefix(host_arch, target_arch, soctype, flavor)
+        toolchain_config_name = "{}_toolchain_config".format(tag_id)
+        cc_toolchain_config(
+            name = toolchain_config_name,
+            host_arch = host_arch,
+            soctype = soctype,
+            flavor = flavor,
+            target_arch = target_arch,
+        )
+        cc_toolchain_name = "{}_cc_toolchain".format(tag_id)
+        cc_toolchain(
+            name = cc_toolchain_name,
+            all_files = ":toolchain_files",
+            ar_files = ":toolchain_files",
+            compiler_files = ":toolchain_files",
+            dwp_files = ":toolchain_files",
+            linker_files = ":toolchain_files",
+            objcopy_files = ":toolchain_files",
+            strip_files = ":toolchain_files",
+            toolchain_config = ":{}".format(toolchain_config_name),
+        )
+        target_compatible_with = [
+            "@platforms//cpu:{}".format(target_arch),
+            "@platforms//os:linux",
+        ]
+        if soctype:
+            target_compatible_with.append(
+                "//bazel/soctype:{}".format(soctype),
+            )
+        if flavor:
+            target_compatible_with.append(
+                "//bazel/flavor:{}".format(flavor),
+            )
 
-def _impl(ctx):
-    tool_paths = [
-        tool_path(
-            name = "ar",
-            path = "bin/sample_linker",
-        ),
-        tool_path(
-            name = "cpp",
-            path = "not_used_in_this_example",
-        ),
-        tool_path(
-            name = "gcc",
-            path = "bin/sample_compiler",
-        ),
-        tool_path(
-            name = "gcov",
-            path = "not_used_in_this_example",
-        ),
-        tool_path(
-            name = "ld",
-            path = "sample_linker",
-        ),
-        tool_path(
-            name = "nm",
-            path = "not_used_in_this_example",
-        ),
-        tool_path(
-            name = "objdump",
-            path = "not_used_in_this_example",
-        ),
-        tool_path(
-            name = "strip",
-            path = "not_used_in_this_example",
-        ),
-    ]
-    host_system_name = ctx.attr.host_arch
-    target_system_name = ctx.attr.target_arch
-    print("Host: {}, Target: {}".format(host_system_name, target_system_name))
-    print("Flavor: {}".format(ctx.attr.flavor))
-    soctype = ctx.attr.soctype
-    print("SocType: {}".format(soctype))
-    if ctx.attr.host_arch != ctx.attr.target_arch:
-        print("X-Compilation for {}".format(soctype))
-
-    # Documented at
-    # https://docs.bazel.build/versions/main/skylark/lib/cc_common.html#create_cc_toolchain_config_info.
-    #
-    # create_cc_toolchain_config_info is the public interface for registering
-    # C++ toolchain behavior.
-    return cc_common.create_cc_toolchain_config_info(
-        ctx = ctx,
-        toolchain_identifier = "custom-toolchain-identifier",
-        host_system_name = host_system_name,
-        target_system_name = target_system_name,
-        target_cpu = ctx.attr.target_arch,
-        target_libc = "unknown",
-        compiler = "gcc",
-        abi_version = "unknown",
-        abi_libc_version = "unknown",
-        tool_paths = tool_paths,
-    )
-
-cc_toolchain_config = rule(
-    implementation = _impl,
-    # You can alternatively define attributes here that make it possible to
-    # instantiate different cc_toolchain_config targets with different behavior.
-    attrs = {
-        "flavor": attr.string(default = "plain"),
-        "host_arch": attr.string(mandatory = True),
-        "soctype": attr.string(default = "plain"),
-        "target_arch": attr.string(mandatory = True),
-    },
-    provides = [CcToolchainConfigInfo],
-)
+        native.toolchain(
+            name = "{}_toolchain".format(tag_id),
+            exec_compatible_with = [
+                "@platforms//cpu:{}".format(host_arch),
+                "@platforms//os:linux",
+            ],
+            target_compatible_with = target_compatible_with,
+            toolchain = ":{}".format(cc_toolchain_name),
+            toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
+        )
