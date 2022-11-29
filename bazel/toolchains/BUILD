@@ -125,6 +125,7 @@ cc_toolchain_config(
     name = "xavier_toolchain_config",
     host_arch = "aarch64",
     target_arch = "aarch64",
+    soctype = "xavier",
 )
 
 cc_toolchain(
@@ -141,14 +142,11 @@ cc_toolchain(
 
 toolchain(
     name = "xavier_toolchain",
-    exec_compatible_with = [
-        "@platforms//cpu:aarch64",
-    ],
     target_compatible_with = [
         "@platforms//cpu:aarch64",
         "//bazel/soctype:xavier",
     ],
-    toolchain = ":aarch64_cc_toolchain",
+    toolchain = ":xavier_cc_toolchain",
     toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
 )
 
@@ -211,7 +209,7 @@ toolchain(
     toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
 )
 
-# X9HP
+# Xavier
 cc_toolchain_config(
     name = "xavier_cross_toolchain_config",
     host_arch = "x86_64",
