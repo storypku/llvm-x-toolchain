@@ -1,13 +1,16 @@
 load("@rules_cc//cc:defs.bzl", "cc_toolchain")
 load(":cc_toolchain_config.bzl", "cc_toolchain_config")
 
-_SUPPORTED_COMBINATIONS = [
+_NATIVE_BUILD_ENTRIES = [
     ("x86_64", "x86_64", "", ""),
     ("x86_64", "x86_64", "", "asan"),
-    ("x86_64", "aarch64", "j5", ""),
-    ("x86_64", "aarch64", "xavier", ""),
     ("aarch64", "aarch64", "xavier", ""),
     ("aarch64", "aarch64", "", ""),
+]
+
+_CROSS_BUILD_ENTRIES = [
+    ("x86_64", "aarch64", "j5", ""),
+    ("x86_64", "aarch64", "xavier", ""),
 ]
 
 def _name_prefix(host_arch, target_arch, soctype = "", flavor = ""):
@@ -23,7 +26,7 @@ def _name_prefix(host_arch, target_arch, soctype = "", flavor = ""):
             return "{}_{}".format(target_arch, flavor) if flavor else target_arch
 
 def define_my_toolchains():
-    for (host_arch, target_arch, soctype, flavor) in _SUPPORTED_COMBINATIONS:
+    for (host_arch, target_arch, soctype, flavor) in _NATIVE_BUILD_ENTRIES + _CROSS_BUILD_ENTRIES:
         tag_id = _name_prefix(host_arch, target_arch, soctype, flavor)
         toolchain_config_name = "{}_toolchain_config".format(tag_id)
         cc_toolchain_config(
@@ -68,3 +71,10 @@ def define_my_toolchains():
             toolchain = ":{}".format(cc_toolchain_name),
             toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
         )
+
+def register_my_toolchains():
+    toolchains = []
+    for (host_arch, target_arch, soctype, flavor) in _NATIVE_BUILD_ENTRIES:
+        tag_id = _name_prefix(host_arch, target_arch, soctype, flavor)
+        toolchains.append("//bazel/toolchains:{}_toolchain".format(tag_id))
+    native.register_toolchains(*toolchains)
