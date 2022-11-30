@@ -18,7 +18,7 @@ toolchain triggers.
 
 ```
 $ bazel clean
-$ bazel build //demo:buildme --platforms=//bazel/platforms:j5_cross --extra_toolchains=//bazel/toolchains:j5_cross_toolchain
+$ bazel build //demo:buildme --platforms=//:j5_cross_platform --extra_toolchains=//bazel/toolchains:j5_cross_toolchain
 INFO: From Compiling demo/buildme.cc:
 bazel/toolchains/bin/sample_compiler: running sample cc_library compiler (produces .o output).
 INFO: From Linking demo/libbuildme.a:
