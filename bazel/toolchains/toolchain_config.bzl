@@ -1,3 +1,4 @@
+load("@rules_cc//cc:defs.bzl", "cc_toolchain")
 load(":cc_toolchain_config.bzl", "cc_toolchain_config")
 
 _NATIVE_BUILD_ENTRIES = [
@@ -24,11 +25,38 @@ def _name_prefix(host_arch, target_arch, soctype = "", flavor = ""):
         else:
             return "{}_{}".format(target_arch, flavor) if flavor else target_arch
 
+def define_my_cc_toolchain_config(
+        toolchain_id,
+        host_arch,
+        target_arch,
+        soctype = "",
+        flavor = ""):
+    toolchain_config_name = "{}_toolchain_config".format(toolchain_id)
+    cc_toolchain_config(
+        name = toolchain_config_name,
+        host_arch = host_arch,
+        target_arch = target_arch,
+        soctype = soctype,
+        flavor = flavor,
+    )
+    cc_toolchain_name = "{}_cc_toolchain".format(toolchain_id)
+    cc_toolchain(
+        name = cc_toolchain_name,
+        all_files = ":toolchain_files",
+        ar_files = ":toolchain_files",
+        compiler_files = ":toolchain_files",
+        dwp_files = ":toolchain_files",
+        linker_files = ":toolchain_files",
+        objcopy_files = ":toolchain_files",
+        strip_files = ":toolchain_files",
+        toolchain_config = ":{}".format(toolchain_config_name),
+    )
+
 def define_my_toolchains():
     for (host_arch, target_arch, soctype, flavor) in _NATIVE_BUILD_ENTRIES + _CROSS_BUILD_ENTRIES:
         toolchain_id = _name_prefix(host_arch, target_arch, soctype, flavor)
         toolchain_config_name = "{}_toolchain_config".format(toolchain_id)
-        cc_toolchain_config(
+        define_my_cc_toolchain_config(
             toolchain_id,
             host_arch,
             target_arch,
