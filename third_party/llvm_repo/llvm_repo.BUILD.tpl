@@ -18,6 +18,7 @@ package(default_visibility = ["//visibility:public"])
 exports_files(glob([
     "%{prefix}bin/*",
     "%{prefix}lib/*",
+    "defs.bzl",
 ]))
 
 ## LLVM toolchain files
