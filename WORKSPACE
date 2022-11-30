@@ -9,6 +9,9 @@ http_archive(
     ],
 )
 
+load("//third_party/llvm_repo:workspace.bzl", llvm_repo = "repo")
+llvm_repo(use_local = False)
+
 load("//bazel/toolchains:toolchain_config.bzl", "register_my_toolchains")
 
 register_my_toolchains()

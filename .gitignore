@@ -1,4 +1,5 @@
 bazel-*
+user.bazelrc
 /external
 *.o
 *.a
