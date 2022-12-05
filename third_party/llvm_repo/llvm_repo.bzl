@@ -74,6 +74,7 @@ def _write_top_level_defs_bzl(arch, llvm_version, llvm_dir, rctx):
         substitutions = {
             "%{arch}": arch,
             "%{llvm_dir}": llvm_dir,
+            "%{llvm_dist_prefix}": _CRAFTED_PREFIX_DIR,
             "%{llvm_version}": llvm_version,
         },
         executable = False,
