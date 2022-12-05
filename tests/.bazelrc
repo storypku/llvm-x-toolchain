@@ -1,0 +1,11 @@
+build --java_runtime_version=remotejdk_11
+build --incompatible_enable_cc_toolchain_resolution
+# build --toolchain_resolution_debug=.*
+
+test --build_tests_only
+
+coverage --experimental_generate_llvm_lcov
+coverage --combined_report=lcov
+coverage --instrument_test_targets
+
+try-import %workspace%/user.bazelrc

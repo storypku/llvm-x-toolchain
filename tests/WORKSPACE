@@ -1,0 +1,36 @@
+workspace(name = "llvm_x_toolchain_test")
+
+local_repository(
+    name = "llvm_x_toolchain",
+    path = "..",
+)
+
+load("@llvm_x_toolchain//bazel:repositories.bzl", "llvm_x_toolchain_repositories")
+
+llvm_x_toolchain_repositories()
+
+load("@llvm_x_toolchain//bazel:llvm_x_toolchain_init.bzl", "llvm_x_toolchain_init")
+
+llvm_x_toolchain_init()
+
+load("@llvm_x_toolchain//toolchain:rules.bzl", "llvm_toolchain")
+
+llvm_toolchain(
+    name = "llvm_toolchain",
+    stdlib = {
+        "": "stdc++",
+    },
+)
+
+
+load("@llvm_toolchain//:toolchains.bzl", "llvm_register_toolchains")
+
+llvm_register_toolchains()
+
+# NOTE(storypku):
+# Please don't put the following lines before llvm_register_toolchains!
+# load("@rules_cc//cc:repositories.bzl", "rules_cc_toolchains")
+# rules_cc_toolchains()
+
+load("//bazel:repositories.bzl", "llvm_x_toolchain_test_deps")
+llvm_x_toolchain_test_deps()

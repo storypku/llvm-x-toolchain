@@ -1,6 +1,7 @@
 bazel-*
 user.bazelrc
 /external
+/tests/external
 *.o
 *.a
 *~
