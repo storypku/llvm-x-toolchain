@@ -1,0 +1,20 @@
+diff --git a/cc/private/toolchain/unix_cc_toolchain_config.bzl b/cc/private/toolchain/unix_cc_toolchain_config.bzl
+index 3d1d615..0392c8a 100644
+--- a/cc/private/toolchain/unix_cc_toolchain_config.bzl
++++ b/cc/private/toolchain/unix_cc_toolchain_config.bzl
+@@ -1176,6 +1176,7 @@ def _impl(ctx):
+         abi_version = ctx.attr.abi_version,
+         abi_libc_version = ctx.attr.abi_libc_version,
+         tool_paths = tool_paths,
++        builtin_sysroot = ctx.attr.builtin_sysroot,
+     )
+ 
+ cc_toolchain_config = rule(
+@@ -1183,6 +1184,7 @@ cc_toolchain_config = rule(
+     attrs = {
+         "abi_libc_version": attr.string(mandatory = True),
+         "abi_version": attr.string(mandatory = True),
++        "builtin_sysroot": attr.string(),
+         "compile_flags": attr.string_list(),
+         "compiler": attr.string(mandatory = True),
+         "coverage_compile_flags": attr.string_list(),

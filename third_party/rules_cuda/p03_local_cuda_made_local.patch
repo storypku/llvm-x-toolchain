@@ -1,0 +1,13 @@
+diff --git a/third_party/rules_cuda/cuda/dependencies.bzl b/third_party/rules_cuda/cuda/dependencies.bzl
+index bb39f83..eda8fc9 100644
+--- a/third_party/rules_cuda/cuda/dependencies.bzl
++++ b/third_party/rules_cuda/cuda/dependencies.bzl
+@@ -26,6 +26,8 @@ def _local_cuda_impl(repository_ctx):
+ _local_cuda = repository_rule(
+     implementation = _local_cuda_impl,
+     environ = ["CUDA_PATH", "PATH"],
++    local = True,
++    configure = True,
+     # remotable = True,
+ )
+ 

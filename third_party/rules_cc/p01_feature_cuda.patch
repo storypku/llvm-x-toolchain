@@ -1,0 +1,80 @@
+diff --git a/cc/private/toolchain/unix_cc_configure.bzl b/cc/private/toolchain/unix_cc_configure.bzl
+index 0c936de..ed0e30f 100644
+--- a/cc/private/toolchain/unix_cc_configure.bzl
++++ b/cc/private/toolchain/unix_cc_configure.bzl
+@@ -14,6 +14,7 @@
+ # limitations under the License.
+ """Configuring the C++ toolchain on Unix platforms."""
+ 
++load("@rules_cuda//cuda:toolchain.bzl", "cuda_compiler_deps")
+ load(
+     ":lib_cc_configure.bzl",
+     "auto_configure_fail",
+@@ -378,7 +379,7 @@ def configure_unix_toolchain(repository_ctx, cpu_value, overriden_tools):
+     cxx_opts = split_escaped(get_env_var(
+         repository_ctx,
+         "BAZEL_CXXOPTS",
+-        "-std=c++0x",
++        "-std=c++11",
+         False,
+     ), ":")
+ 
+@@ -442,7 +443,7 @@ def configure_unix_toolchain(repository_ctx, cpu_value, overriden_tools):
+             )),
+             "%{cc_compiler_deps}": get_starlark_list([":builtin_include_directory_paths"] + (
+                 [":cc_wrapper"] if darwin else []
+-            )),
++            ) + cuda_compiler_deps()),
+             "%{cc_toolchain_identifier}": cc_toolchain_identifier,
+             "%{compile_flags}": get_starlark_list(
+                 [
+diff --git a/cc/private/toolchain/unix_cc_toolchain_config.bzl b/cc/private/toolchain/unix_cc_toolchain_config.bzl
+index 4325a68..3d1d615 100644
+--- a/cc/private/toolchain/unix_cc_toolchain_config.bzl
++++ b/cc/private/toolchain/unix_cc_toolchain_config.bzl
+@@ -25,6 +25,7 @@ load(
+     "variable_with_value",
+     "with_feature_set",
+ )
++load("@rules_cuda//cuda:toolchain.bzl", "cuda_toolchain_config")
+ 
+ all_compile_actions = [
+     ACTION_NAMES.c_compile,
+@@ -580,7 +581,8 @@ def _impl(ctx):
+                 ],
+                 flag_groups = [
+                     flag_group(
+-                        flags = ["-iquote", "%{quote_include_paths}"],
++                        # Single option to not trip up nvcc.
++                        flags = ["-iquote%{quote_include_paths}"],
+                         iterate_over = "quote_include_paths",
+                     ),
+                     flag_group(
+@@ -1155,10 +1157,15 @@ def _impl(ctx):
+             llvm_coverage_map_format_feature,
+         ]
+ 
++    cuda = cuda_toolchain_config(
++        cuda_toolchain_info = ctx.attr._cuda_toolchain_info,
++        compiler_path = ctx.attr.tool_paths["gcc"],
++    )
++
+     return cc_common.create_cc_toolchain_config_info(
+         ctx = ctx,
+-        features = features,
+-        action_configs = action_configs,
++        features = features + cuda.features,
++        action_configs = action_configs + cuda.action_configs,
+         cxx_builtin_include_directories = ctx.attr.cxx_builtin_include_directories,
+         toolchain_identifier = ctx.attr.toolchain_identifier,
+         host_system_name = ctx.attr.host_system_name,
+@@ -1195,6 +1202,9 @@ cc_toolchain_config = rule(
+         "tool_paths": attr.string_dict(),
+         "toolchain_identifier": attr.string(mandatory = True),
+         "unfiltered_compile_flags": attr.string_list(),
++        "_cuda_toolchain_info": attr.label(
++            default = Label("@rules_cuda//cuda:cuda_toolchain_info"),
++        ),
+     },
+     provides = [CcToolchainConfigInfo],
+ )
