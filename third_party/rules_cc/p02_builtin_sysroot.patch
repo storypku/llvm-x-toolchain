@@ -1,7 +1,7 @@
-diff --git a/cc/private/toolchain/unix_cc_toolchain_config.bzl b/cc/private/toolchain/unix_cc_toolchain_config.bzl
+diff --git cc/private/toolchain/unix_cc_toolchain_config.bzl cc/private/toolchain/unix_cc_toolchain_config.bzl
 index 3d1d615..0392c8a 100644
---- a/cc/private/toolchain/unix_cc_toolchain_config.bzl
-+++ b/cc/private/toolchain/unix_cc_toolchain_config.bzl
+--- cc/private/toolchain/unix_cc_toolchain_config.bzl
++++ cc/private/toolchain/unix_cc_toolchain_config.bzl
 @@ -1176,6 +1176,7 @@ def _impl(ctx):
          abi_version = ctx.attr.abi_version,
          abi_libc_version = ctx.attr.abi_libc_version,
