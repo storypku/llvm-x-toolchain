@@ -30,6 +30,18 @@ function what_is_different() {
     diff -aruN "${copies[@]}"
 }
 
-what_is_different
+function cleanup() {
+    rm -rf "${CURR_DIR}"/*.git
+}
+
+function main() {
+    if [[ $# -gt 0 && "$1" == "clean" ]]; then
+        cleanup
+    else
+        what_is_different
+    fi
+}
+
+main "$@"
 
 
