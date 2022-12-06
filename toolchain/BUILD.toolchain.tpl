@@ -1,6 +1,7 @@
 package(default_visibility = ["//visibility:public"])
 
 load("@rules_cc//cc:defs.bzl", "cc_toolchain", "cc_toolchain_suite")
+load("@rules_cuda//cuda:toolchain.bzl", "cuda_compiler_deps")
 load("%{cc_toolchain_config_bzl}", "cc_toolchain_config")
 
 # Following filegroup targets are used when not using absolute paths and shared
@@ -29,7 +30,7 @@ filegroup(
     srcs = [
         ":internal-use-symlinked-tools",
         ":internal-use-wrapped-tools",
-    ],
+    ] + cuda_compiler_deps(),
     visibility = ["//visibility:private"],
 )
 

@@ -2,6 +2,25 @@ build --java_runtime_version=remotejdk_11
 build --incompatible_enable_cc_toolchain_resolution
 # build --toolchain_resolution_debug=.*
 
+build --flag_alias=cuda=@rules_cuda//cuda:enable_cuda
+build --flag_alias=cuda_gpu_arch=@rules_cuda//cuda:cuda_targets
+
+build:cuda_clang --@rules_cuda//cuda:compiler=clang
+build:cuda_clang --@rules_cuda//cuda:copts=-Wno-unknown-cuda-version
+
+build:cuda_nvcc --@rules_cuda//cuda:compiler=nvcc
+build:cuda_nvcc --@rules_cuda//cuda:copts=-allow-unsupported-compiler,--default-stream=per-thread
+
+build --config=gpu
+
+build:gpu --config=cuda_clang
+build:gpu --cuda=true
+build:gpu --copt="-UQ_CPU_ONLY"
+build:gpu --cuda_gpu_arch=sm_70,sm_75,sm_80,sm_86
+
+build:cpu --cuda=false
+build:cpu --copt="-DQ_CPU_ONLY=1"
+
 test --build_tests_only
 
 coverage --experimental_generate_llvm_lcov
