@@ -21,6 +21,22 @@ build:gpu --cuda_gpu_arch=sm_70,sm_75,sm_80,sm_86
 build:cpu --cuda=false
 build:cpu --copt="-DQ_CPU_ONLY=1"
 
+build:sanitizer --strip=never
+build:sanitizer --test_timeout=3600
+build:sanitizer --copt -O1
+build:sanitizer --copt -g
+build:sanitizer --copt -fno-omit-frame-pointer
+build:sanitizer --linkopt -ldl
+
+# Ref: https://github.com/grpc/grpc/blob/master/tools/bazel.rc
+build:asan --config=sanitizer
+build:asan --extra_toolchains=@llvm_toolchain_for_asan//:cc-toolchain-x86_64-linux
+build:asan --copt -fsanitize=address
+build:asan --copt -fsanitize-blacklist=bazel/sanitizers/asan/ignorelist.txt
+build:asan --linkopt -fsanitize=address
+build:asan --platform_suffix=-asan
+build:asan --test_env="ASAN_OPTIONS=abort_on_error=1:unmap_shadow_on_exit=1:protect_shadow_gap=0"
+
 test --build_tests_only
 
 coverage --experimental_generate_llvm_lcov

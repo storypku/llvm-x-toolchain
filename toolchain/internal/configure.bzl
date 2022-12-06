@@ -18,11 +18,21 @@ load(
 _ALIASED_LIBS = ["omp"]
 _ALIASED_TOOLS = ["clang-format", "llvm-cov"]
 
-def _include_dirs_str(rctx, key):
-    dirs = rctx.attr.cxx_builtin_include_directories.get(key)
-    if not dirs:
+# Gets a value from the dict for the target pair, falling back to an empty
+# key, if present.  Bazel 4.* doesn't support nested starlark functions, so
+# we cannot simplify _dict_value() by defining it as a nested function.
+def _dict_value(d, target_pair, default = None):
+    return d.get(target_pair, d.get("", default))
+
+def _extra_compiler_deps_str(rctx, key):
+    extra_compiler_deps = _dict_value(rctx.attr.extra_compiler_deps, key)
+    if not extra_compiler_deps:
         return ""
-    return ("\n" + 12 * " ").join(["\"%s\"," % d for d in dirs])
+    else:
+        return "".join([
+            """\n{}"{}",""".format(" " * 8, extra_dep)
+            for extra_dep in extra_compiler_deps
+        ])
 
 def llvm_config_impl(rctx):
     _check_os_arch_keys(rctx.attr.sysroot)
@@ -86,6 +96,7 @@ def llvm_config_impl(rctx):
         unfiltered_compile_flags_dict = rctx.attr.unfiltered_compile_flags,
         llvm_version = llvm_dist.llvm_version,
     )
+
     cc_toolchains_str, toolchain_labels_str = _cc_toolchains_str(
         workspace_name,
         toolchain_info,
@@ -107,6 +118,7 @@ def llvm_config_impl(rctx):
     )
 
     # BUILD file with all the generated toolchain definitions.
+    extra_compiler_deps_str = _extra_compiler_deps_str(rctx, key)
     rctx.template(
         "BUILD.bazel",
         Label("//toolchain:BUILD.toolchain.tpl"),
@@ -114,6 +126,7 @@ def llvm_config_impl(rctx):
             "%{cc_toolchain_config_bzl}": str(rctx.attr._cc_toolchain_config_bzl),
             "%{cc_toolchains}": cc_toolchains_str,
             "%{convenience_targets}": convenience_targets_str,
+            "%{extra_compiler_deps}": extra_compiler_deps_str,
             "%{symlinked_tools}": symlinked_tools_str,
             "%{wrapper_bin_prefix}": wrapper_bin_prefix,
         },
@@ -163,12 +176,6 @@ def _cc_toolchains_str(
     sep = ",\n" + " " * 8  # 2 tabs with tabstop=4.
     toolchain_labels_str = sep.join(["\"{}\"".format(d) for d in toolchain_names])
     return cc_toolchains_str, toolchain_labels_str
-
-# Gets a value from the dict for the target pair, falling back to an empty
-# key, if present.  Bazel 4.* doesn't support nested starlark functions, so
-# we cannot simplify _dict_value() by defining it as a nested function.
-def _dict_value(d, target_pair, default = None):
-    return d.get(target_pair, d.get("", default))
 
 def _cc_toolchain_str(
         suffix,

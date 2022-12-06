@@ -29,7 +29,7 @@ filegroup(
     name = "internal-use-files",
     srcs = [
         ":internal-use-symlinked-tools",
-        ":internal-use-wrapped-tools",
+        ":internal-use-wrapped-tools",%{extra_compiler_deps}
     ] + cuda_compiler_deps(),
     visibility = ["//visibility:private"],
 )

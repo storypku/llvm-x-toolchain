@@ -1,0 +1,2 @@
+# Ref: https://clang.llvm.org/docs/SanitizerSpecialCaseList.html#format
+# src:experimental/users/jiaming/sanitizers/use_after_free.cc

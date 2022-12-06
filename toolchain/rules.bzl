@@ -66,6 +66,12 @@ _compiler_configuration_attrs = {
                "target OS and arch pair you want to override " +
                "({}); empty key overrides all.".format(_target_pairs)),
     ),
+    "extra_compiler_deps": attr.string_list_dict(
+        mandatory = False,
+        doc = ("Additional compiler_deps to be added to the toolchain, " +
+               "for each target OS and arch pair you want to support " +
+               "({}); ".format(_target_pairs)),
+    ),
     "link_flags": attr.string_list_dict(
         mandatory = False,
         doc = ("Override for link_flags, replacing the default values. " +
@@ -142,4 +148,3 @@ llvm_toolchain = repository_rule(
     configure = True,
     implementation = _llvm_config_impl,
 )
-

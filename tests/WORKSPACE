@@ -26,10 +26,17 @@ load("@llvm_toolchain//:toolchains.bzl", "llvm_register_toolchains")
 
 llvm_register_toolchains()
 
-# NOTE(storypku):
-# Please don't put the following lines before llvm_register_toolchains!
-# load("@rules_cc//cc:repositories.bzl", "rules_cc_toolchains")
-# rules_cc_toolchains()
+llvm_toolchain(
+    name = "llvm_toolchain_for_asan",
+    extra_compiler_deps = {
+        "": [
+            "@llvm_x_toolchain_test//bazel/sanitizers:asan_deps",
+        ],
+    },
+    stdlib = {
+        "": "stdc++",
+    },
+)
 
 load("//bazel:repositories.bzl", "llvm_x_toolchain_test_repositories")
 
