@@ -8,5 +8,3 @@ sh_binary(
     srcs = ["my_script.sh"],
     args = if_j5(["j5"]),
 )
-
-

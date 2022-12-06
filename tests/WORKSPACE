@@ -22,7 +22,6 @@ llvm_toolchain(
     },
 )
 
-
 load("@llvm_toolchain//:toolchains.bzl", "llvm_register_toolchains")
 
 llvm_register_toolchains()
@@ -32,5 +31,10 @@ llvm_register_toolchains()
 # load("@rules_cc//cc:repositories.bzl", "rules_cc_toolchains")
 # rules_cc_toolchains()
 
-load("//bazel:repositories.bzl", "llvm_x_toolchain_test_deps")
-llvm_x_toolchain_test_deps()
+load("//bazel:repositories.bzl", "llvm_x_toolchain_test_repositories")
+
+llvm_x_toolchain_test_repositories()
+
+load("//bazel:llvm_x_toolchain_test_init.bzl", "llvm_x_toolchain_test_init")
+
+llvm_x_toolchain_test_init()
