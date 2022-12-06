@@ -24,10 +24,9 @@ cmake(
     name = "libevent",
     cache_entries = {
         "EVENT__DISABLE_BENCHMARK": "ON",
-        "EVENT__DISABLE_TESTS": "ON",
         "EVENT__DISABLE_SAMPLES": "ON",
+        "EVENT__DISABLE_TESTS": "ON",
         "EVENT__LIBRARY_TYPE": "STATIC",
-        "CMAKE_VERBOSE_MAKEFILE": "ON",
         # "OPENSSL_ROOT_DIR": "$$EXT_BUILD_DEPS$$/openssl",
     },
     generate_args = ["-GNinja"],

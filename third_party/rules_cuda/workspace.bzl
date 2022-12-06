@@ -4,7 +4,7 @@ def clean_dep(dep):
     return str(Label(dep))
 
 def repo():
-    git_rev = "9cee484d9f9314c2a30d18bff02e5f240308ae5b" # Latest as of Nov 2, 2022
+    git_rev = "9cee484d9f9314c2a30d18bff02e5f240308ae5b"  # Latest as of Nov 2, 2022
     http_archive(
         name = "rules_cuda",
         strip_prefix = "runtime-{}/third_party/rules_cuda".format(git_rev),

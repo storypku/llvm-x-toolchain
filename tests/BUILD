@@ -15,14 +15,6 @@ platform(
 )
 
 platform(
-    name = "x86_64_asan_platform",
-    constraint_values = [
-        "//bazel/flavor:asan",
-    ],
-    parents = [":x86_64_platform"],
-)
-
-platform(
     name = "aarch64_platform",
     constraint_values = [
         "@platforms//cpu:aarch64",

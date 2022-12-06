@@ -13,6 +13,16 @@ load("@llvm_x_toolchain//bazel:llvm_x_toolchain_init.bzl", "llvm_x_toolchain_ini
 
 llvm_x_toolchain_init()
 
+# Dependencies of the tests repo
+load("//bazel:repositories.bzl", "llvm_x_toolchain_test_repositories")
+
+llvm_x_toolchain_test_repositories()
+
+load("//bazel:llvm_x_toolchain_test_init.bzl", "llvm_x_toolchain_test_init")
+
+llvm_x_toolchain_test_init()
+
+# Setup toolchains
 load("@llvm_x_toolchain//toolchain:rules.bzl", "llvm_toolchain")
 
 llvm_toolchain(
@@ -38,10 +48,16 @@ llvm_toolchain(
     },
 )
 
-load("//bazel:repositories.bzl", "llvm_x_toolchain_test_repositories")
+llvm_toolchain(
+    name = "xavier_cross_toolchain",
+    sysroot = {
+        "linux-aarch64": "@chromium_sysroot_linux_aarch64//:sysroot",
+    },
+)
 
-llvm_x_toolchain_test_repositories()
-
-load("//bazel:llvm_x_toolchain_test_init.bzl", "llvm_x_toolchain_test_init")
-
-llvm_x_toolchain_test_init()
+llvm_toolchain(
+    name = "j5_cross_toolchain",
+    sysroot = {
+        "linux-aarch64": "@chromium_sysroot_linux_aarch64//:sysroot",
+    },
+)
