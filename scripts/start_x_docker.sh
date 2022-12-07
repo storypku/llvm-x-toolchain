@@ -56,19 +56,36 @@ function docker_start_user() {
     bash -c "/workspace/scripts/docker_start_user.sh ${user} ${uid} ${group} ${gid}"
 }
 
+function jetpack_x_env_setup() {
+  local container="$1"
+  local user="$2"
+  docker exec -u root "${container}" \
+    bash -c "/workspace/scripts/x_env_setup.sh ${user}"
+}
+
 function start_jetpack_x_docker() {
-  local hostname_dev
-  hostname_dev="${JETPACK_X_NAME//_/-}"
+  local hostname_in
+  hostname_in="${JETPACK_X_NAME//_/-}"
+
+  readonly llvm_dir="/opt/llvm"
+  declare -a mounts
+  mounts+=(
+    "-v" "${TOP_DIR}:/workspace"
+    "-v" "/dev/bus/usb:/dev/bus/usb"
+  )
+  if [[ -x "${llvm_dir}/bin/clang" ]]; then
+    mounts+=("-v" "${llvm_dir}:${llvm_dir}")
+  fi
 
   run docker run -itd \
     --privileged \
     --ipc=host \
     --net=host \
-    -v /dev/bus/usb:/dev/bus/usb \
-    -v "${TOP_DIR}":/workspace \
-    --name "${JETPACK_X_NAME}" \
+    "${mounts[@]}" \
+    --add-host "${hostname_in}:127.0.0.1" \
+    --hostname="${hostname_in}" \
     --workdir=/workspace \
-    --hostname="${hostname_dev}" \
+    --name "${JETPACK_X_NAME}" \
     "${JETPACK_X_IMG}"
 }
 
@@ -88,6 +105,7 @@ function main() {
   ok "Successfully started ${JETPACK_X_NAME} based on ${JETPACK_X_IMG}"
   info "Setup user account and grant permissions for ${DOCKER_USER} ..."
   docker_start_user "${JETPACK_X_NAME}" "${DOCKER_USER}"
+  jetpack_x_env_setup "${JETPACK_X_NAME}" "${DOCKER_USER}"
   ok "To login, run: "
   ok "  scripts/goto_x_docker.sh"
 }

@@ -30,3 +30,9 @@ cuda_binary(
         ":vec_add_lib",
     ],
 )
+
+cuda_binary(
+    name = "deviceQuery",
+    srcs = ["deviceQuery.cpp"],
+)
+
