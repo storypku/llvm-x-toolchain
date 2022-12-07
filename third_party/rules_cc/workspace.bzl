@@ -19,7 +19,8 @@ def repo():
         ],
         patch_args = ["-p1"],
         patches = [
-            clean_dep("//third_party/rules_cc:p01_feature_cuda.patch"),
-            clean_dep("//third_party/rules_cc:p02_builtin_sysroot.patch"),
+            clean_dep("//third_party/rules_cc:p01_builtin_sysroot.patch"),
+            clean_dep("//third_party/rules_cc:p02_feature_cuda.patch"),
+            clean_dep("//third_party/rules_cc:p03_nvcc_host_compiler.patch"),
         ],
     )

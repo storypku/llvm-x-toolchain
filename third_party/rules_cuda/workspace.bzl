@@ -17,5 +17,6 @@ def repo():
         patches = [
             clean_dep("//third_party/rules_cuda:p01_sm_86_support.patch"),
             clean_dep("//third_party/rules_cuda:p03_local_cuda_made_local.patch"),
+            clean_dep("//third_party/rules_cuda:p04_host_compiler.patch"),
         ],
     )

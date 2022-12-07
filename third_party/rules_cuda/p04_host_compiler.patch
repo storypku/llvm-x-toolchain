@@ -1,0 +1,38 @@
+diff --git a/third_party/rules_cuda/cuda/toolchain.bzl b/third_party/rules_cuda/cuda/toolchain.bzl
+index 57c9ace..6be221a 100644
+--- a/third_party/rules_cuda/cuda/toolchain.bzl
++++ b/third_party/rules_cuda/cuda/toolchain.bzl
+@@ -47,10 +46,14 @@ def _clang_cuda_toolchain_config(copts, cuda_targets):
+         action_configs = [],
+     )
+ 
+-def _nvcc_cuda_toolchain_config(copts, cuda_targets, nvcc, compiler_path):
++def _nvcc_cuda_toolchain_config(copts, cuda_targets, nvcc, toolchain_workspace, compiler_path):
++    if compiler_path.startswith("/"):
++        host_compiler = compiler_path
++    else:
++        host_compiler = "external/{}/{}".format(toolchain_workspace, compiler_path)
+     flags = [
+         "--x=cu",
+-        "--compiler-bindir=" + compiler_path,
++        "--compiler-bindir=" + host_compiler,
+         "--forward-unknown-to-host-compiler",
+     ] + copts
+     gencode_format = "--generate-code=arch=compute_{0},code={1}_{0}"
+@@ -80,7 +83,7 @@ def _nvcc_cuda_toolchain_config(copts, cuda_targets, nvcc, compiler_path):
+         ],
+     )
+ 
+-def cuda_toolchain_config(cuda_toolchain_info, compiler_path):
++def cuda_toolchain_config(cuda_toolchain_info, compiler_path, toolchain_workspace):
+     """Returns features and action configs to include in cc_toolchain_config.
+ 
+     Args:
+@@ -102,6 +105,7 @@ def cuda_toolchain_config(cuda_toolchain_info, compiler_path):
+         cuda_toolchain_info.copts,
+         cuda_toolchain_info.cuda_targets,
+         cuda_toolchain_info.nvcc,
++        toolchain_workspace,
+         compiler_path,
+     )
+ 

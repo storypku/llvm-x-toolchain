@@ -163,6 +163,7 @@ def _cc_toolchains_str(
     for (target_os, target_arch) in _supported_targets:
         suffix = "{}-{}".format(target_arch, target_os)
         cc_toolchain_str = _cc_toolchain_str(
+            workspace_name,
             suffix,
             target_os,
             target_arch,
@@ -178,6 +179,7 @@ def _cc_toolchains_str(
     return cc_toolchains_str, toolchain_labels_str
 
 def _cc_toolchain_str(
+        workspace_name,
         suffix,
         target_os,
         target_arch,
@@ -214,6 +216,7 @@ cc_toolchain_config(
     toolchain_path_prefix = "{llvm_dist_path_prefix}",
     tools_path_prefix = "{tools_path_prefix}",
     wrapper_bin_prefix = "{wrapper_bin_prefix}",
+    workspace_name = "{workspace_name}",
     compiler_configuration = {{
       "additional_include_dirs": {additional_include_dirs},
       "sysroot_path": "{sysroot_path}",
@@ -362,6 +365,7 @@ cc_toolchain(
         llvm_dist_path_prefix = toolchain_info.llvm_dist_path_prefix,
         tools_path_prefix = toolchain_info.tools_path_prefix,
         wrapper_bin_prefix = toolchain_info.wrapper_bin_prefix,
+        workspace_name = workspace_name,
         sysroot_label_str = sysroot_label_str,
         sysroot_path = sysroot_path,
         additional_include_dirs = _list_to_string(toolchain_info.additional_include_dirs_dict.get(target_pair, [])),

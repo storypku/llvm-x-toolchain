@@ -1,0 +1,20 @@
+diff --git a/cc/private/toolchain/unix_cc_toolchain_config.bzl b/cc/private/toolchain/unix_cc_toolchain_config.bzl
+index 3cf638a..a120fa4 100644
+--- a/cc/private/toolchain/unix_cc_toolchain_config.bzl
++++ b/cc/private/toolchain/unix_cc_toolchain_config.bzl
+@@ -1072,6 +1072,7 @@ def _impl(ctx):
+     cuda = cuda_toolchain_config(
+         cuda_toolchain_info = ctx.attr._cuda_toolchain_info,
+         compiler_path = ctx.attr.tool_paths["gcc"],
++        toolchain_workspace = ctx.attr.toolchain_workspace,
+     )
+ 
+     return cc_common.create_cc_toolchain_config_info(
+@@ -1115,6 +1116,7 @@ cc_toolchain_config = rule(
+         "target_system_name": attr.string(mandatory = True),
+         "tool_paths": attr.string_dict(),
+         "toolchain_identifier": attr.string(mandatory = True),
++        "toolchain_workspace": attr.string(),
+         "unfiltered_compile_flags": attr.string_list(),
+         "_cuda_toolchain_info": attr.label(
+             default = Label("@rules_cuda//cuda:cuda_toolchain_info"),

@@ -23,6 +23,7 @@ def cc_toolchain_config(
         toolchain_path_prefix,
         tools_path_prefix,
         wrapper_bin_prefix,
+        workspace_name,
         compiler_configuration,
         llvm_version):
     host_os_arch_key = _os_arch_pair("linux", host_arch)
@@ -217,11 +218,12 @@ def cc_toolchain_config(
 
     # The tool names come from [here](https://github.com/bazelbuild/bazel/blob/c7e58e6ce0a78fdaff2d716b4864a5ace8917626/src/main/java/com/google/devtools/build/lib/rules/cpp/CppConfiguration.java#L76-L90):
     # NOTE: Ensure these are listed in toolchain_tools in toolchain/internal/common.bzl.
+    gcc_path = wrapper_bin_prefix + "cc_wrapper.sh"
     tool_paths = {
         "ar": tools_path_prefix + "llvm-ar",
         "cpp": tools_path_prefix + "clang-cpp",
         "dwp": tools_path_prefix + "llvm-dwp",
-        "gcc": wrapper_bin_prefix + "cc_wrapper.sh",
+        "gcc": gcc_path,
         "gcov": tools_path_prefix + "llvm-profdata",
         "ld": tools_path_prefix + "ld.lld",
         "llvm-cov": tools_path_prefix + "llvm-cov",
@@ -283,4 +285,5 @@ def cc_toolchain_config(
         coverage_link_flags = coverage_link_flags,
         supports_start_end_lib = supports_start_end_lib,
         builtin_sysroot = sysroot_path,
+        toolchain_workspace = workspace_name,
     )

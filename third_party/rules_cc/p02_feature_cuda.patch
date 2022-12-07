@@ -29,10 +29,10 @@ index 0c936de..ed0e30f 100644
              "%{compile_flags}": get_starlark_list(
                  [
 diff --git a/cc/private/toolchain/unix_cc_toolchain_config.bzl b/cc/private/toolchain/unix_cc_toolchain_config.bzl
-index 4325a68..3d1d615 100644
+index 413dcb6..3cf638a 100644
 --- a/cc/private/toolchain/unix_cc_toolchain_config.bzl
 +++ b/cc/private/toolchain/unix_cc_toolchain_config.bzl
-@@ -25,6 +25,7 @@ load(
+@@ -24,6 +24,7 @@ load(
      "variable_with_value",
      "with_feature_set",
  )
@@ -40,7 +40,7 @@ index 4325a68..3d1d615 100644
  
  all_compile_actions = [
      ACTION_NAMES.c_compile,
-@@ -580,7 +581,8 @@ def _impl(ctx):
+@@ -579,7 +580,8 @@ def _impl(ctx):
                  ],
                  flag_groups = [
                      flag_group(
@@ -50,8 +50,8 @@ index 4325a68..3d1d615 100644
                          iterate_over = "quote_include_paths",
                      ),
                      flag_group(
-@@ -1155,10 +1157,15 @@ def _impl(ctx):
-             llvm_coverage_map_format_feature,
+@@ -1067,10 +1069,15 @@ def _impl(ctx):
+             unfiltered_compile_flags_feature,
          ]
  
 +    cuda = cuda_toolchain_config(
@@ -68,7 +68,7 @@ index 4325a68..3d1d615 100644
          cxx_builtin_include_directories = ctx.attr.cxx_builtin_include_directories,
          toolchain_identifier = ctx.attr.toolchain_identifier,
          host_system_name = ctx.attr.host_system_name,
-@@ -1195,6 +1202,9 @@ cc_toolchain_config = rule(
+@@ -1109,6 +1116,9 @@ cc_toolchain_config = rule(
          "tool_paths": attr.string_dict(),
          "toolchain_identifier": attr.string(mandatory = True),
          "unfiltered_compile_flags": attr.string_list(),
