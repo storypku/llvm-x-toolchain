@@ -32,6 +32,7 @@ function install_dev_tools() {
   apt-get update && apt-get -y install --no-install-recommends \
     file \
     tree \
+    vim \
     python3-pil
 }
 
