@@ -14,7 +14,7 @@ function install_cuda_samples() {
   pushd /l4t > /dev/null
   /l4t/targetfs/usr/local/cuda/bin/cuda-install-samples-11.4.sh .
   mv ./NVIDIA_CUDA-11.4_Samples cuda_samples
-  popd >/dev/null
+  popd > /dev/null
 }
 
 function change_srcdir_owner() {
@@ -29,7 +29,7 @@ function change_srcdir_owner() {
 
 function install_dev_tools() {
   # python3-pil for compiling Jetson Multimedia API samples
-  apt-get update && apt-get -y install --no-install-recommends \
+  apt-get update && apt-get -y -qq install --no-install-recommends \
     file \
     tree \
     vim \
