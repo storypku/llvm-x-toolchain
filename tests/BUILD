@@ -26,20 +26,20 @@ platform(
     ],
 )
 
-# Native Platform for Xavier
+# Native Platform for Orin
 platform(
-    name = "xavier_platform",
+    name = "orin_platform",
     constraint_values = [
-        "//bazel/soctype:xavier",
+        "//bazel/soctype:orin",
     ],
     parents = [":aarch64_platform"],
 )
 
-# Cross Compilation Platform for Xavier and J5
+# Cross Compilation Platform for Orin and J5
 platform(
-    name = "xavier_cross_platform",
+    name = "orin_cross_platform",
     constraint_values = [
-        "//bazel/soctype:xavier",
+        "//bazel/soctype:orin",
     ],
     exec_compatible_with = [
         "@platforms//cpu:x86_64",

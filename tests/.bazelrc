@@ -43,12 +43,12 @@ build:j5_cross --extra_toolchains=@j5_cross_toolchain//:cc-toolchain-aarch64-lin
 build:j5_cross --config=cpu
 build:j5_cross --copt="-D__J5__=1"
 
-build:xavier --platforms=//:xavier_platform
-build:xavier --copt="-D__XAVIER__=1"
+build:orin --platforms=//:orin_platform
+build:orin --copt="-D__ORIN__=1"
 
-build:xavier_cross --platforms=//:xavier_cross_platform
-build:xavier_cross --extra_toolchains=@xavier_cross_toolchain//:cc-toolchain-aarch64-linux
-build:xavier_cross --copt="-D__XAVIER__=1"
+build:orin_cross --platforms=//:orin_cross_platform
+build:orin_cross --extra_toolchains=@orin_cross_toolchain//:cc-toolchain-aarch64-linux
+build:orin_cross --copt="-D__ORIN__=1"
 
 test --build_tests_only
 

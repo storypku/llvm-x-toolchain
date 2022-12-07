@@ -49,21 +49,21 @@ def if_aarch64_cuda(if_true, if_false = []):
         "//conditions:default": if_false,
     })
 
-def if_xavier(if_true, if_false = []):
+def if_orin(if_true, if_false = []):
     return select({
-        "//bazel:linux_xavier": if_true,
+        "//bazel:linux_orin": if_true,
         "//conditions:default": if_false,
     })
 
-def if_xavier_cpu_only(if_true, if_false = []):
+def if_orin_cpu_only(if_true, if_false = []):
     return select({
-        "//bazel:linux_xavier_cpu_only": if_true,
+        "//bazel:linux_orin_cpu_only": if_true,
         "//conditions:default": if_false,
     })
 
-def if_xavier_cuda(if_true, if_false = []):
+def if_orin_cuda(if_true, if_false = []):
     return select({
-        "//bazel:linux_xavier_cuda": if_true,
+        "//bazel:linux_orin_cuda": if_true,
         "//conditions:default": if_false,
     })
 

@@ -3,7 +3,7 @@ package(default_visibility = ["//visibility:public"])
 constraint_setting(name = "soctype")
 
 constraint_value(
-    name = "xavier",
+    name = "orin",
     constraint_setting = ":soctype",
 )
 

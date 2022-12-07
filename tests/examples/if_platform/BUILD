@@ -31,12 +31,12 @@ cc_binary(
         "//bazel:linux_x86_64_cuda": [
             "-DQ_PLATFORM=\\\"AMD64\\\"",
         ],
-        "//bazel:linux_xavier_cpu_only": [
-            "-DQ_PLATFORM=\\\"XAVIER\\\"",
+        "//bazel:linux_orin_cpu_only": [
+            "-DQ_PLATFORM=\\\"ORIN\\\"",
             "-DQ_CPU_ONLY_EXT=2",
         ],
-        "//bazel:linux_xavier_cuda": [
-            "-DQ_PLATFORM=\\\"XAVIER\\\"",
+        "//bazel:linux_orin_cuda": [
+            "-DQ_PLATFORM=\\\"ORIN\\\"",
         ],
         "//conditions:default": [],
     }),
