@@ -4,9 +4,15 @@ set -euo pipefail
 # Script to start Jetpack Cross Compilation Docker
 # Ref: https://catalog.ngc.nvidia.com/orgs/nvidia/containers/jetpack-linux-aarch64-crosscompile-x86
 
-TOP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
+PARENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd -P)"
+CHILD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
+
+PARENT_DIR_IN="/workspace"
+CHILD_DIR_IN="${PARENT_DIR_IN}/tests"
+TARGET_FS="/l4t/targetfs"
+
 # shellcheck disable=SC1090,SC1091
-source "${TOP_DIR}/scripts/docker_helper.sh"
+source "${CHILD_DIR}/scripts/docker_helper.sh"
 
 DOCKER_USER="${USER:-whoami}"
 JETPACK_X_NAME="jetpack_x_${DOCKER_USER}"
@@ -53,14 +59,14 @@ function docker_start_user() {
   gid="$(id -g)"
 
   docker exec -u root "${container}" \
-    bash -c "/workspace/scripts/docker_start_user.sh ${user} ${uid} ${group} ${gid}"
+    bash -c "${CHILD_DIR_IN}/scripts/docker_start_user.sh ${user} ${uid} ${group} ${gid}"
 }
 
 function jetpack_x_env_setup() {
   local container="$1"
   local user="$2"
   docker exec -u root "${container}" \
-    bash -c "/workspace/scripts/x_env_setup.sh ${user}"
+    bash -c "${CHILD_DIR_IN}/scripts/x_env_setup.sh ${user}"
 }
 
 function start_jetpack_x_docker() {
@@ -70,9 +76,12 @@ function start_jetpack_x_docker() {
   readonly llvm_dir="/opt/llvm"
   declare -a mounts
   mounts+=(
-    "-v" "${TOP_DIR}:/workspace"
+    "-v" "${PARENT_DIR}:${PARENT_DIR_IN}"
     "-v" "/dev/bus/usb:/dev/bus/usb"
   )
+  if [[ -d "${TARGET_FS}" ]]; then
+    mounts+=("-v" "${TARGET_FS}:${TARGET_FS}")
+  fi
   if [[ -x "${llvm_dir}/bin/clang" ]]; then
     mounts+=("-v" "${llvm_dir}:${llvm_dir}")
   fi
@@ -84,13 +93,13 @@ function start_jetpack_x_docker() {
     "${mounts[@]}" \
     --add-host "${hostname_in}:127.0.0.1" \
     --hostname="${hostname_in}" \
-    --workdir=/workspace \
+    --workdir="${CHILD_DIR_IN}" \
     --name "${JETPACK_X_NAME}" \
     "${JETPACK_X_IMG}"
 }
 
 function prepare_git_config() {
-  pushd "${TOP_DIR}" > /dev/null
+  pushd "${PARENT_DIR}" > /dev/null
   git config --local include.path "../.gitconfig"
   popd > /dev/null
 }

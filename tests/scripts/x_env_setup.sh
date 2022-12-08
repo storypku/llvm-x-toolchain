@@ -4,7 +4,9 @@ set -x
 
 function extract_targetfs_and_toolchain {
   pushd /l4t > /dev/null
-  tar -I lbzip2 -xf targetfs.tbz2
+  if [[ ! -d targetfs ]]; then
+    tar -I lbzip2 -xf targetfs.tbz2
+  fi
   mkdir toolchain
   tar -C toolchain -xf toolchain.tar.gz
   popd > /dev/null
@@ -32,6 +34,7 @@ function install_dev_tools() {
   apt-get update && apt-get -y -qq install --no-install-recommends \
     file \
     tree \
+    curl \
     vim \
     python3-pil
 }

@@ -51,7 +51,7 @@ llvm_toolchain(
 llvm_toolchain(
     name = "orin_cross_toolchain",
     sysroot = {
-        "linux-aarch64": "@chromium_sysroot_linux_aarch64//:sysroot",
+        "linux-aarch64": "/l4t/targetfs",
     },
 )
 
