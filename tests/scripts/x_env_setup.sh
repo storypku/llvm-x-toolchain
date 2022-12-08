@@ -30,12 +30,14 @@ function change_srcdir_owner() {
 }
 
 function install_dev_tools() {
-  # python3-pil for compiling Jetson Multimedia API samples
+  # 1. python3-pil for compiling Jetson Multimedia API samples
+  # 2. libtinfo5 was needed by llvm/clang distribution (e.g., /opt/llvm/bin/clang++)
   apt-get update && apt-get -y -qq install --no-install-recommends \
     file \
     tree \
     curl \
     vim \
+    libtinfo5 \
     python3-pil
 }
 
