@@ -41,3 +41,12 @@ cc_binary(
         "//conditions:default": [],
     }),
 )
+
+cc_library(
+    name = "orin_only",
+    srcs = ["orin_only.cc"],
+    hdrs = ["orin_only.h"],
+    target_compatible_with = [
+        "//bazel/soctype:orin",
+    ],
+)

@@ -15,8 +15,8 @@ def repo():
         ],
         patch_args = ["-p3"],
         patches = [
-            clean_dep("//third_party/rules_cuda:p01_sm_86_support.patch"),
-            clean_dep("//third_party/rules_cuda:p03_local_cuda_made_local.patch"),
+            clean_dep("//third_party/rules_cuda:p01_more_sms.patch"),
+            clean_dep("//third_party/rules_cuda:p03_local_cuda_config.patch"),
             clean_dep("//third_party/rules_cuda:p04_host_compiler.patch"),
         ],
     )

@@ -27,9 +27,9 @@ cmake(
         "EVENT__DISABLE_SAMPLES": "ON",
         "EVENT__DISABLE_TESTS": "ON",
         "EVENT__LIBRARY_TYPE": "STATIC",
-        # "OPENSSL_ROOT_DIR": "$$EXT_BUILD_DEPS$$/openssl",
     },
-    generate_args = ["-GNinja"],
+    generate_args = ["-G\"Unix Makefiles\""],
+    # ["-GNinja"],
     lib_source = ":all_srcs",
     linkopts = [
         "-pthread",

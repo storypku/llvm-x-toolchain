@@ -16,7 +16,6 @@ build --config=gpu
 build:gpu --config=cuda_clang
 build:gpu --cuda=true
 build:gpu --copt="-UQ_CPU_ONLY"
-build:gpu --cuda_gpu_arch=sm_70,sm_75,sm_80,sm_86
 
 build:cpu --cuda=false
 build:cpu --copt="-DQ_CPU_ONLY=1"
@@ -30,8 +29,6 @@ build:sanitizer --linkopt -ldl
 
 # Ref: https://github.com/grpc/grpc/blob/master/tools/bazel.rc
 build:asan --config=sanitizer
-# TODO(storypku): NO hardcode --extra_toolchains
-build:asan --extra_toolchains=@llvm_toolchain_for_asan//:cc-toolchain-x86_64-linux
 build:asan --copt -fsanitize=address
 build:asan --copt -fsanitize-blacklist=bazel/sanitizers/asan/ignorelist.txt
 build:asan --linkopt -fsanitize=address

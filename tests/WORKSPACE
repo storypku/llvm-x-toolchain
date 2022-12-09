@@ -48,11 +48,25 @@ llvm_toolchain(
     },
 )
 
+load("@llvm_x_toolchain//toolchain:local_cuda_cross.bzl", "local_cuda_cross")
 llvm_toolchain(
     name = "orin_cross_toolchain",
     sysroot = {
         "linux-aarch64": "/l4t/targetfs",
     },
+)
+
+# For Orin x-compilation
+local_cuda_cross(
+    name = "local_cuda_x_orin",
+    sysroot_dir = "/l4t/targetfs",
+    arch = "aarch64",
+)
+
+local_cuda_cross(
+    name = "local_cuda_x_orin2",
+    sysroot_dir = "/opt",
+    arch = "aarch64",
 )
 
 llvm_toolchain(
