@@ -1,29 +1,36 @@
-# LLVM Toolchain for Bazel w/ Cross Compilation Support
+# Unified LLVM Toolchain Framework for Bazel w/ X-Compilation Support
+
+## Introduction
+
+Cross compilation is a common practice for embedded and autonomous driving systems.
+As the time of this writing, configurating Clang-based toolchains for Bazel w/ CUDA
+support on Linux was still challenging. As John Millikin pointed out([Ref](https://john-millikin.com/bazel-school/toolchains)):
+
+> It assumes background knowledge in [cross compilation](https://en.wikipedia.org/wiki/Cross_compiler), plus experience with Bazel's [Starlark extension language](https://bazel.build/rules/language), [build rules](https://bazel.build/extending/rules), and [repository definitions](https://bazel.build/extending/repo). 
+> Most users of Bazel shouldn't need to care about the details of compiler toolchains, but this is important stuff for maintainers of language rules.
+
+This project was an attempt to address this issue, by integrating existing work by
+[grailbio/bazel-toolchain](https://github.com/grailbio/bazel-toolchain) and [tf_runtime/rules_cuda](https://github.com/tensorflow/runtime/tree/master/third_party/rules_cuda). 
 
 
-## Building with the default toolchain
+## Examples
+Please refer to scripts in the `tests/scripts/run_tests` directory for examples.
 
-```
-$ bazel clean
-$ bazel build //demo:buildme
-$ file bazel-bin//demo/libbuildme.a
-bazel-bin//libbuildme.a: current ar archive
-```
+## Requirements
+Bazel 5.3 or newer (might work with older versions). This project was tested w/ Bazel 5.3.2 on Ubuntu 18.04 and 20.04.
 
-## Custom toolchain with platforms
+## Known Issues
 
-This mode requires `--incompatible_enable_cc_toolchain_resolution` (already set in `.bazelrc`).
- Without this flag, `--platforms` and `--extra_toolchains` are ignored and the default
-toolchain triggers.
+For my own use case, this project was tailored to work w/ LLVM/Clang >= 13.0.1 on Ubuntu release >=18.04 (Windows and MacOS
+Support present in [grailbio/bazel-toolchain](https://github.com/grailbio/bazel-toolchain) was removed).
 
-```
-$ bazel clean
-$ bazel build //demo:buildme --platforms=//:j5_cross_platform --extra_toolchains=//bazel/toolchains:j5_cross_toolchain
-INFO: From Compiling demo/buildme.cc:
-bazel/toolchains/bin/sample_compiler: running sample cc_library compiler (produces .o output).
-INFO: From Linking demo/libbuildme.a:
-bazel/toolchains/bin/sample_linker: running sample cc_library linker (produces .a output).
+## Future Work
+It seems the `rules_cuda` project inside [tensorflow/runtime](https://github.com/tensorflow/runtime/tree/master/third_party/rules_cuda) has evolved into an independent, full-fedged [CUDA rules for Bazel](https://github.com/bazel-contrib/rules_cuda) project.
+So we might switch to using this repo as `cuda_library` implementation if possible.
 
-$ cat bazel-bin//demo/libbuildme.a
-bazel/toolchains/bin/sample_linker: sample output
-```
+## Credits
+
+This work was impossible without these excellent projects besides Bazel.
+
+1. The [LLVM toolchain for Bazel](https://github.com/grailbio/bazel-toolchain) project
+2. The [tf_runtime/rules_cuda: CUDA rules for Bazel](https://github.com/tensorflow/runtime/tree/master/third_party/rules_cuda) project.
