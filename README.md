@@ -1,4 +1,4 @@
-# Unified LLVM Toolchain Framework for Bazel w/ X-Compilation Support
+# Unified LLVM Toolchains for Bazel w/ X-Compilation Support
 
 ## Introduction
 
