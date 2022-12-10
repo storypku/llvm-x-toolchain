@@ -3,7 +3,7 @@
 ## Introduction
 
 Cross compilation is a common practice for embedded and autonomous driving systems.
-As the time of this writing, configurating Clang-based toolchains for Bazel w/ CUDA
+As the time of this writing, configuration of Clang-based Bazel toolchains w/ CUDA
 support on Linux was still challenging. As John Millikin pointed out([Ref](https://john-millikin.com/bazel-school/toolchains)):
 
 > It assumes background knowledge in [cross compilation](https://en.wikipedia.org/wiki/Cross_compiler), plus experience with Bazel's [Starlark extension language](https://bazel.build/rules/language), [build rules](https://bazel.build/extending/rules), and [repository definitions](https://bazel.build/extending/repo). 
@@ -21,7 +21,7 @@ Bazel 5.3 or newer (might work with older versions). This project was tested w/ 
 
 ## Known Issues
 
-For my own use case, this project was tailored to work w/ LLVM/Clang >= 13.0.1 on Ubuntu release >=18.04 (Windows and MacOS
+For my own use case, this project was tailored to work w/ LLVM/Clang >= 13.0.1 on Ubuntu releases >= 18.04 (Windows and MacOS
 Support present in [grailbio/bazel-toolchain](https://github.com/grailbio/bazel-toolchain) was removed).
 
 ## Future Work
