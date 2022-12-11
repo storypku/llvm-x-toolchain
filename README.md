@@ -1,4 +1,4 @@
-# Unified LLVM Toolchains for Bazel w/ X-Compilation Support
+# Unified Clang-based Bazel Toolchains w/ CUDA and X-Compilation Support
 
 ## Introduction
 
