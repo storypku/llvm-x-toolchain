@@ -7,7 +7,7 @@ local_repository(
 
 load("@llvm_x_toolchain//bazel:repositories.bzl", "llvm_x_toolchain_repositories")
 
-llvm_x_toolchain_repositories()
+llvm_x_toolchain_repositories(llvm_version = "15.0.6")
 
 load("@llvm_x_toolchain//bazel:llvm_x_toolchain_init.bzl", "llvm_x_toolchain_init")
 
