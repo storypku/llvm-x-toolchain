@@ -27,6 +27,10 @@ def _llvm_dist_urls(arch, llvm_version):
             "clang+llvm-14.0.0-aarch64-linux-gnu.tar.xz",
             "1792badcd44066c79148ffeb1746058422cc9d838462be07e3cb19a4b724a1ee",
         ],
+        "aarch64-15.0.6": [
+            "clang+llvm-15.0.6-aarch64-linux-gnu.tar.xz",
+            "8ca4d68cf103da8331ca3f35fe23d940c1b78fb7f0d4763c1c059e352f5d1bec",
+        ],
         "x86_64-13.0.1": [
             "clang+llvm-13.0.1-x86_64-linux-gnu-ubuntu-18.04.tar.xz",
             "84a54c69781ad90615d1b0276a83ff87daaeded99fbc64457c350679df7b4ff0",
@@ -34,6 +38,10 @@ def _llvm_dist_urls(arch, llvm_version):
         "x86_64-14.0.0": [
             "clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz",
             "61582215dafafb7b576ea30cc136be92c877ba1f1c31ddbbd372d6d65622fef5",
+        ],
+        "x86_64-15.0.6": [
+            "clang+llvm-15.0.6-x86_64-linux-gnu-ubuntu-18.04.tar.xz",
+            "38bc7f5563642e73e69ac5626724e206d6d539fbef653541b34cae0ba9c3f036",
         ],
     }
     key = "{}-{}".format(arch, llvm_version)
