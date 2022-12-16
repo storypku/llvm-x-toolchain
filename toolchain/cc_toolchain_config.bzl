@@ -176,7 +176,9 @@ def cc_toolchain_config(
         ]
 
         link_flags.extend([
-            "-l:libstdc++.a",
+            # "-l:libstdc++.a",
+            # Use dynamically linked libstdc++ for @com_google_tcmalloc
+            "-lstdc++",
         ])
     elif stdlib == "none":
         cxx_flags = [
