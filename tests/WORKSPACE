@@ -22,6 +22,9 @@ load("//bazel:llvm_x_toolchain_test_init.bzl", "llvm_x_toolchain_test_init")
 
 llvm_x_toolchain_test_init()
 
+load("//bazel:llvm_x_toolchain_test_extra_init.bzl", "llvm_x_toolchain_test_extra_init")
+llvm_x_toolchain_test_extra_init()
+
 # Setup toolchains
 load("@llvm_x_toolchain//toolchain:rules.bzl", "llvm_toolchain")
 
