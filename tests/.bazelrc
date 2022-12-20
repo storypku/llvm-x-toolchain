@@ -13,9 +13,6 @@ build:cuda_nvcc --@rules_cuda//cuda:copts=-allow-unsupported-compiler,--default-
 
 build --config=gpu
 
-# Temporary workaround for //example/hello:tcmalloc_hello
-build --copt="-Wno-deprecated-builtins"
-
 build:gpu --config=cuda_clang
 build:gpu --cuda=true
 build:gpu --copt="-UQ_CPU_ONLY"

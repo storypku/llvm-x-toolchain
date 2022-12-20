@@ -1,0 +1,33 @@
+commit e61fc6d8da5154c6a665d7a28b9978f11b78eb62
+Author: Keith Smiley <keithbsmiley@gmail.com>
+Date:   Tue Oct 4 17:22:04 2022 +0000
+
+    Fix more clang deprecated builtins
+    
+    If you compile with clang 15+, the uses of trivially destructible and
+    assignable are deprecated. This sets this configuration correctly as the
+    ifdef to fix the build.
+    
+    Fixes https://github.com/abseil/abseil-cpp/issues/1201
+    Related https://github.com/abseil/abseil-cpp/pull/1277
+
+diff --git a/absl/base/config.h b/absl/base/config.h
+index 95131068..35911698 100644
+--- a/absl/base/config.h
++++ b/absl/base/config.h
+@@ -243,6 +243,7 @@ static_assert(ABSL_INTERNAL_INLINE_NAMESPACE_STR[0] != 'h' ||
+ #ifdef ABSL_HAVE_STD_IS_TRIVIALLY_DESTRUCTIBLE
+ #error ABSL_HAVE_STD_IS_TRIVIALLY_DESTRUCTIBLE cannot be directly set
+ #elif defined(_LIBCPP_VERSION) || defined(_MSC_VER) || \
++    (defined(__clang__) && __clang_major__ >= 15) ||    \
+     (!defined(__clang__) && defined(__GLIBCXX__) &&    \
+      ABSL_INTERNAL_HAVE_MIN_GNUC_VERSION(4, 8))
+ #define ABSL_HAVE_STD_IS_TRIVIALLY_DESTRUCTIBLE 1
+@@ -264,6 +265,7 @@ static_assert(ABSL_INTERNAL_INLINE_NAMESPACE_STR[0] != 'h' ||
+ #elif defined(ABSL_HAVE_STD_IS_TRIVIALLY_ASSIGNABLE)
+ #error ABSL_HAVE_STD_IS_TRIVIALLY_ASSIGNABLE cannot directly set
+ #elif (defined(__clang__) && defined(_LIBCPP_VERSION)) ||                    \
++    (defined(__clang__) && __clang_major__ >= 15) ||                         \
+     (!defined(__clang__) &&                                                  \
+      ((ABSL_INTERNAL_HAVE_MIN_GNUC_VERSION(7, 4) && defined(__GLIBCXX__)) || \
+       (ABSL_INTERNAL_HAVE_MIN_GNUC_VERSION(8, 2) &&                          \
